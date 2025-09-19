@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <title>AR Urdu Poetry</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+  <style>
+    #instruction {
+      position: fixed;
+      top: 10px;
+      left: 0;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 3px black;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    #controls {
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10000;
+      background: rgba(0,0,0,0.6);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    #controls button, #controls input {
+      font-size: 14px;
+      padding: 5px 10px;
+    }
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body style="margin:0; overflow:hidden;">
+  <div id="instruction">Place your camera near HIRO logo</div>
+
+  <!-- Controls -->
+  <div id="controls">
+    <button id="toggleVoice">🔊 Mute</button>
+    <label style="color:white;">Volume:
+      <input id="volumeControl" type="range" min="0" max="1" step="0.1" value="1">
+    </label>
+  </div>
+
+  <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: true;'>
+    <a-assets>
+      <img id="poetry" src="https://raw.githubusercontent.com/UmmeHaniBaig/AR-POETRY/main/docs/im2.png?v=2">
+    </a-assets>
+
+    <a-marker preset="hiro">
+      <a-plane 
+        src="#poetry"
+        position="0 0.05 0"
+        rotation="-90 0 0"
+        width="3"
+        height="1.5">
+      </a-plane>
+
+      <!-- Avatar teacher -->
+      <a-entity id="teacher"
+        gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF/Avocado.gltf"
+        scale="0.5 0.5 0.5"
+        position="0 1 0">
+      </a-entity>
+    </a-marker>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    // --- Speech Setup ---
+    const poetryText = "یہ آپ کی منتخب کردہ اردو شاعری ہے۔"; // Replace with actual poetry text
+    let utterance = new SpeechSynthesisUtterance(poetryText);
+    utterance.lang = "ur-PK";
+    utterance.volume = 1; 
+
+    speechSynthesis.speak(utterance);
+
+    // --- Controls ---
+    const toggleBtn = document.getElementById("toggleVoice");
+    const volumeControl = document.getElementById("volumeControl");
+    let isMuted = false;
+
+    toggleBtn.addEventListener("click", () => {
+      if (!isMuted) {
+        speechSynthesis.cancel();
+        toggleBtn.textContent = "🔇 Unmute";
+        isMuted = true;
+      } else {
+        speechSynthesis.speak(utterance);
+        toggleBtn.textContent = "🔊 Mute";
+        isMuted = false;
+      }
+    });
+
+    volumeControl.addEventListener("input", (e) => {
+      utterance.volume = parseFloat(e.target.value);
+      if (!isMuted) {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+      }
+    });
+  </script>
+</body>
+</html>
