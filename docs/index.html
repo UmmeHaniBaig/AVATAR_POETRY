@@ -36,16 +36,12 @@
       font-size: 14px;
       padding: 5px 10px;
     }
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
+    body { margin: 0; overflow: hidden; }
   </style>
 </head>
 <body>
   <div id="instruction">Place your camera near HIRO logo</div>
 
-  <!-- Controls -->
   <div id="controls">
     <button id="toggleVoice">🔊 Mute</button>
     <label style="color:white;">Volume:
@@ -68,11 +64,11 @@
         height="1.5">
       </a-plane>
 
-      <!-- 👨 Teacher avatar (GLB model) -->
+      <!-- 👨 Working 3D avatar (Astronaut as placeholder) -->
       <a-entity id="teacher"
-        gltf-model="https://models.readyplayer.me/642ccfddeeecf80014a2e5a9.glb"
-        scale="0.8 0.8 0.8"
-        position="0 0 1.2"
+        gltf-model="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Astronaut/glTF-Binary/Astronaut.glb"
+        scale="0.5 0.5 0.5"
+        position="0 0 1.5"
         rotation="0 180 0">
       </a-entity>
     </a-marker>
@@ -81,15 +77,12 @@
   </a-scene>
 
   <script>
-    // --- Speech Setup ---
-    const poetryText = "یہ آپ کی منتخب کردہ اردو شاعری ہے۔"; // Replace with actual poetry text
+    const poetryText = "یہ آپ کی منتخب کردہ اردو شاعری ہے۔"; 
     let utterance = new SpeechSynthesisUtterance(poetryText);
     utterance.lang = "ur-PK";
     utterance.volume = 1;
-
     speechSynthesis.speak(utterance);
 
-    // --- Controls ---
     const toggleBtn = document.getElementById("toggleVoice");
     const volumeControl = document.getElementById("volumeControl");
     let isMuted = false;
