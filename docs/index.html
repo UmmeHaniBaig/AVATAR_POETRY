@@ -42,7 +42,7 @@
     }
   </style>
 </head>
-<body style="margin:0; overflow:hidden;">
+<body>
   <div id="instruction">Place your camera near HIRO logo</div>
 
   <!-- Controls -->
@@ -59,6 +59,7 @@
     </a-assets>
 
     <a-marker preset="hiro">
+      <!-- Poetry plane -->
       <a-plane 
         src="#poetry"
         position="0 0.05 0"
@@ -67,11 +68,12 @@
         height="1.5">
       </a-plane>
 
-      <!-- Avatar teacher -->
+      <!-- 👨 Teacher avatar (GLB model) -->
       <a-entity id="teacher"
-        gltf-model="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models@master/2.0/Avocado/glTF/Avocado.gltf"
-        scale="0.5 0.5 0.5"
-        position="0 1 0">
+        gltf-model="https://models.readyplayer.me/642ccfddeeecf80014a2e5a9.glb"
+        scale="0.8 0.8 0.8"
+        position="0 0 1.2"
+        rotation="0 180 0">
       </a-entity>
     </a-marker>
 
@@ -83,7 +85,7 @@
     const poetryText = "یہ آپ کی منتخب کردہ اردو شاعری ہے۔"; // Replace with actual poetry text
     let utterance = new SpeechSynthesisUtterance(poetryText);
     utterance.lang = "ur-PK";
-    utterance.volume = 1; 
+    utterance.volume = 1;
 
     speechSynthesis.speak(utterance);
 
