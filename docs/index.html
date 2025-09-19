@@ -2,37 +2,32 @@
 <html lang="ur">
 <head>
   <meta charset="UTF-8">
-  <title>AR Urdu Poetry with Teacher Avatar</title>
+  <title>AR Urdu Poetry with Voice</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
-  <script src="https://unpkg.com/aframe-gesture-detector/dist/aframe-gesture-detector.min.js"></script>
-  <script src="https://unpkg.com/aframe-gesture-detector/dist/gesture-handler.min.js"></script>
   <style>
+    body { margin: 0; overflow: hidden; }
     #instruction {
       position: fixed;
       top: 10px;
       left: 0;
       width: 100vw;
-      display: flex;
-      justify-content: center;
+      text-align: center;
       font-size: 18px;
       font-weight: bold;
       color: white;
       text-shadow: 1px 1px 3px black;
       z-index: 9999;
-      pointer-events: none;
     }
     #controls {
       position: fixed;
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
       z-index: 10000;
     }
     button {
-      padding: 6px 12px;
+      padding: 8px 16px;
       border: none;
       border-radius: 6px;
       background: maroon;
@@ -40,41 +35,34 @@
       font-weight: bold;
       cursor: pointer;
     }
-    input[type="range"] {
-      width: 100px;
-    }
-    body {
-      margin: 0;
-      overflow: hidden;
+    iframe {
+      display: none; /* keep YouTube hidden */
     }
   </style>
 </head>
 <body>
-  <div id="instruction">📸 Place your camera near HIRO marker</div>
+  <div id="instruction">📸 Point your camera at the HIRO marker</div>
 
-  <!-- Poetry Audio -->
-  <audio id="poetryVoice" autoplay>
-    <source src="https://translate.google.com/translate_tts?ie=UTF-8&tl=ur&client=tw-ob&q=تجھے اس قوم نے پالا ہے آغوش محبت میں محبت ميں کچل ڈالا تھا جس نے پائوں ميں تاج سر دارا" type="audio/mpeg">
-  </audio>
-
-  <!-- Controls -->
+  <!-- Button to trigger poetry voice -->
   <div id="controls">
-    <button onclick="toggleMute()">Mute/Unmute</button>
-    <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+    <button onclick="playVoice()">🔊 Play Poetry Voice</button>
   </div>
+
+  <!-- Hidden YouTube iframe -->
+  <iframe id="ytplayer" width="0" height="0"
+    src="https://www.youtube.com/embed/VIDEO_ID?enablejsapi=1"
+    frameborder="0" allow="autoplay">
+  </iframe>
 
   <!-- AR Scene -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;">
     <a-assets>
-      <!-- Poetry Image -->
+      <!-- Poetry image -->
       <img id="poetry" src="im2.png">
-
-      <!-- Teacher Avatar -->
-      <a-asset-item id="teacherModel" src="teacher_av.glb"></a-asset-item>
     </a-assets>
 
     <a-marker preset="hiro">
-      <!-- Poetry Plane (flat on ground) -->
+      <!-- Poetry Plane -->
       <a-plane 
         src="#poetry"
         position="0 0 0"
@@ -82,50 +70,23 @@
         width="3"
         height="1.5">
       </a-plane>
-
-      <!-- Teacher Avatar (movable + speaking effect) -->
-      <a-entity id="teacher"
-        gltf-model="#teacherModel"
-        position="0 0 -2"
-        rotation="0 180 0"
-        scale="0.8 0.8 0.8"
-        gesture-handler>
-      </a-entity>
     </a-marker>
 
     <a-entity camera></a-entity>
   </a-scene>
 
+  <!-- YouTube API for control -->
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    const audio = document.getElementById('poetryVoice');
-    const volumeControl = document.getElementById('volume');
-    const teacher = document.getElementById('teacher');
-
-    // mute/unmute
-    function toggleMute() {
-      audio.muted = !audio.muted;
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('ytplayer');
     }
-
-    // volume control
-    volumeControl.addEventListener('input', (e) => {
-      audio.volume = e.target.value;
-    });
-
-    // animate avatar when speaking
-    audio.addEventListener('play', () => {
-      teacher.setAttribute('animation__talk', {
-        property: 'scale',
-        dir: 'alternate',
-        dur: 300,
-        easing: 'easeInOutSine',
-        loop: true,
-        to: '0.9 1 0.9'
-      });
-    });
-
-    audio.addEventListener('ended', () => {
-      teacher.removeAttribute('animation__talk');
-    });
+    function playVoice() {
+      if (player) {
+        player.playVideo();
+      }
+    }
   </script>
 </body>
 </html>
