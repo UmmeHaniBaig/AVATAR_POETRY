@@ -2,7 +2,7 @@
 <html lang="ur">
 <head>
   <meta charset="UTF-8">
-  <title>AR Urdu Poetry with Voice</title>
+  <title>AR Urdu Poetry with Local Voice</title>
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
   <style>
@@ -35,27 +35,21 @@
       font-weight: bold;
       cursor: pointer;
     }
-    /* Keep iframe tiny, so video can play but remains hidden */
-    #yt-container {
-      width: 1px;
-      height: 1px;
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      opacity: 0;
-    }
   </style>
 </head>
 <body>
-  <div id="instruction">📸 Point your camera at the HIRO marker</div>
+  <div id="instruction">Point your camera at the HIRO marker</div>
+
+  <!-- Poetry Voice (local mp3 file) -->
+  <audio id="poetryVoice">
+    <source src="poetry.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
   <!-- Button to play the poetry voice -->
   <div id="controls">
-    <button onclick="playVoice()">🔊 Play Poetry Voice</button>
+    <button onclick="playVoice()">Play Poetry Voice</button>
   </div>
-
-  <!-- Hidden YouTube iframe container -->
-  <div id="yt-container"></div>
 
   <!-- AR Scene with poetry image -->
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: true;">
@@ -76,29 +70,11 @@
     <a-entity camera></a-entity>
   </a-scene>
 
-  <!-- YouTube API -->
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    let player;
-
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('yt-container', {
-        height: '200',
-        width: '200',
-        videoId: 'EP0cWU3VD_s',
-        playerVars: {
-          autoplay: 0,
-          controls: 0
-        }
-      });
-    }
+    const audio = document.getElementById("poetryVoice");
 
     function playVoice() {
-      if (player && player.playVideo) {
-        player.playVideo();
-      } else {
-        alert("Player not ready yet, try again in a moment.");
-      }
+      audio.play();
     }
   </script>
 </body>
